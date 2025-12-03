@@ -299,6 +299,21 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+        }
+
+        .company-logo {
+            height: 24px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            display: block;
+            object-fit: contain;
+        }
+
+        .company-logo.bitexen-logo {
+            height: 24px;
+            max-width: 80px;
         }
 
         .card-desc {
@@ -584,12 +599,16 @@
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Head of BD</h3>
-                    <p class="card-subtitle">Bitexen</p>
+                    <p class="card-subtitle">
+                        <img src="https://statics.bitexen.com/assets/logos/white_logo.png" alt="Bitexen" class="company-logo bitexen-logo">
+                    </p>
                     <p class="card-desc">Built exchange platform from ground up. Positioned Bitexen among top three Turkish exchanges by volume within six months.</p>
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Head of Ops & BD</h3>
-                    <p class="card-subtitle">Tomya</p>
+                    <p class="card-subtitle">
+                        <img src="https://www.tomya.com/assets/img/general/tomya-logo.svg" alt="Tomya" class="company-logo">
+                    </p>
                     <p class="card-desc">Developed core operational frameworks and business strategies for exchange launch.</p>
                 </div>
                 <div class="card fade-up">
