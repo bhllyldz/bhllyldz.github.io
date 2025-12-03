@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behlül Yıldız | Blockchain Consultant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Nardo Grey Palette */
+            --bg-dark: #121315;
+            --bg-panel: #1c1e21;
+            --nardo-grey: #686b70;
+            --nardo-light: #85898f;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent: #ffffff; /* Saf beyaz vurgu - Endüstriyel şıklık */
+            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(28, 30, 33, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--nardo-grey);
+            border-radius: 3px;
+        }
+
+        /* Canvas & Overlay */
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 20%, #121315 90%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .accent-text {
+            color: var(--nardo-light);
+        }
+
+        /* Embedded Header */
+        .embedded-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 3rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 10;
+            pointer-events: none; /* Allow clicking through header area */
+        }
+
+        .logo-embedded {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 400;
+            font-size: 1.2rem;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            position: relative;
+            pointer-events: auto;
+            padding-left: 1rem;
+            border-left: 2px solid var(--nardo-grey);
+            line-height: 1;
+        }
+
+        .nav-embedded {
+            display: flex;
+            flex-direction: column; /* Vertical layout for industrial feel */
+            gap: 0.5rem;
+            list-style: none;
+            text-align: right;
+            pointer-events: auto;
+        }
+
+        .nav-embedded a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            transition: all 0.3s;
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-embedded a::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-embedded a:hover {
+            color: var(--accent);
+            padding-right: 10px;
+        }
+
+        .nav-embedded a:hover::after {
+            width: 6px;
+        }
+
+        /* Main Layout */
+        section {
+            min-height: 100vh;
+            padding: 6rem 8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Hero Section */
+        .hero-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 0.95;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .hero-title span {
+            color: #686b70;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            /* Removed side border for centered layout */
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            width: 100%;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        /* Experience & About Cards */
+        .section-header {
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background: var(--border);
+            max-width: 200px;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-panel);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--nardo-grey);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--nardo-grey);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-year {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: var(--nardo-light);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Skills List */
+        .skills-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+        }
+
+        .skill-category {
+            margin-bottom: 3rem;
+        }
+
+        .skill-category h3 {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--nardo-light);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .skill-item:hover {
+            color: var(--text-primary);
+            padding-left: 1rem;
+            border-bottom-color: var(--nardo-grey);
+        }
+
+        /* Contact */
+        .contact-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .contact-heading {
+            font-size: clamp(4rem, 10vw, 8rem);
+            color: #686b70;
+            opacity: 1;
+            line-height: 1;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+            transition: opacity 0.3s;
+        }
+        
+        .contact-wrapper:hover .contact-heading {
+            opacity: 0.5;
+        }
+
+        .contact-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cta-text {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            letter-spacing: 0.2em;
+        }
+
+        .cta-handle {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.2rem;
+            transition: all 0.3s;
+        }
+
+        .contact-cta:hover .cta-handle {
+            color: var(--nardo-grey);
+            border-color: var(--nardo-grey);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 8rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Scroll Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            section { padding: 6rem 4rem; }
+            .grid-cards { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 768px) {
+            /* Header Mobile */
+            .embedded-header {
+                padding: 1.5rem 2rem;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .logo-embedded {
+                padding-left: 0;
+                border-left: none;
+                text-align: center;
+            }
+            
+            .nav-embedded {
+                display: none; /* Hide nav links on mobile for simplicity */
+            }
+
+            /* Section Mobile */
+            section { padding: 4rem 1.5rem; }
+            
+            /* Hero Mobile */
+            .hero-title { 
+                font-size: 3.5rem; 
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-desc {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .hero-stats {
+                gap: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .stat h4 { font-size: 2rem; }
+            
+            /* Grid Mobile */
+            .grid-cards { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem;
+            }
+
+            .skills-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            /* Contact Mobile */
+            .contact-wrapper { padding: 2rem 0; }
+            .contact-heading { font-size: 4rem; }
+            .cta-handle { font-size: 1.5rem; }
+            
+            /* Footer Mobile */
+            footer {
+                padding: 2rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background -->
+    <div id="webgl-container"></div>
+    <div class="vignette"></div>
+
+    <!-- Navigation Embedded -->
+    <div class="embedded-header">
+        <a href="#" class="logo-embedded">BEHLUL YILDIZ</a>
+        <ul class="nav-embedded">
+            <li><a href="#about">Profile</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#expertise">Expertise</a></li>
+            <li><a href="#contact">Connect</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <!-- Hero -->
+        <section id="about">
+            <div class="hero-grid">
+                <div class="hero-content fade-up">
+                    <h1 class="hero-title">BLOCKCHAIN<br><span>CONSULTANT</span></h1>
+                    <div class="hero-desc">
+                        Advising crypto ventures on product strategy, operational scalability, and regulatory readiness.
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <h4>7+</h4>
+                            <p>Years Exp</p>
+                        </div>
+                        <div class="stat">
+                            <h4>20+</h4>
+                            <p>Projects</p>
+                        </div>
+                        <div class="stat">
+                            <h4>1.5M</h4>
+                            <p>Users Impacted</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience -->
+        <section id="experience">
+            <div class="section-header fade-up">
+                <h2 class="section-title">CAREER TRAJECTORY</h2>
+            </div>
+            <div class="grid-cards">
+                <div class="card fade-up">
+                    <span class="card-year">2022 - 2025</span>
+                    <h3 class="card-title">Head of Crypto</h3>
+                    <p class="card-subtitle">Keopex</p>
+                    <p class="card-desc">Led entire crypto operations division. Engineered strategic partnerships and product roadmaps for large-scale integration.</p>
+                </div>
+                <div class="card fade-up">
+                    <span class="card-year">2021 - 2022</span>
+                    <h3 class="card-title">Consultant</h3>
+                    <p class="card-subtitle">Independent</p>
+                    <p class="card-desc">Technical advisory for blockchain startups. Focused on infrastructure scalability and market growth strategies.</p>
+                </div>
+                <div class="card fade-up">
+                    <span class="card-year">2020 - 2021</span>
+                    <h3 class="card-title">Head of BD</h3>
+                    <p class="card-subtitle">Bitexen Teknoloji</p>
+                    <p class="card-desc">Built exchange platform from ground zero. Achieved top 3 market position in Turkey within 6 months.</p>
+                </div>
+                <div class="card fade-up">
+                    <span class="card-year">2020</span>
+                    <h3 class="card-title">Head of Ops</h3>
+                    <p class="card-subtitle">Tomya Teknoloji</p>
+                    <p class="card-desc">Developed core operational frameworks and business strategies for exchange launch.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expertise -->
+        <section id="expertise">
+            <div class="section-header fade-up">
+                <h2 class="section-title">TECHNICAL ARSENAL</h2>
+            </div>
+            <div class="skills-wrapper">
+                <div class="skill-column fade-up">
+                    <div class="skill-category">
+                        <h3>EXECUTIVE LEADERSHIP</h3>
+                        <div class="skill-item"><span>Product Lifecycle Management</span><span>01</span></div>
+                        <div class="skill-item"><span>Strategic Planning</span><span>02</span></div>
+                        <div class="skill-item"><span>Team Building</span><span>03</span></div>
+                        <div class="skill-item"><span>Market Expansion</span><span>04</span></div>
+                    </div>
+                </div>
+                <div class="skill-column fade-up">
+                    <div class="skill-category">
+                        <h3>BLOCKCHAIN ARCHITECTURE</h3>
+                        <div class="skill-item"><span>Smart Contract Development</span><span>01</span></div>
+                        <div class="skill-item"><span>Tokenization Strategy</span><span>02</span></div>
+                        <div class="skill-item"><span>DeFi Protocol Design</span><span>03</span></div>
+                        <div class="skill-item"><span>Wallet Integration</span><span>04</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact">
+            <div class="contact-wrapper fade-up">
+                <h2 class="contact-heading">CONTACT</h2>
+                <div class="contact-line"></div>
+                <a href="https://x.com/bhllyldz" target="_blank" class="contact-cta">
+                    <span class="cta-text">GET IN TOUCH</span>
+                    <span class="cta-handle">@BHLLYLDZ</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span>Behlul Yildiz &copy; 2025</span>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Scene - Nardo Grey Theme
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x121315, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Colors
+        const nardoColor = 0x686b70;
+        const lightColor = 0xffffff;
+
+        // Create Geometric Grid (Finance/Data feel)
+        const geometry = new THREE.BufferGeometry();
+        const points = [];
+        const size = 20;
+        const count = 30; // Grid density
+
+        for (let i = 0; i < count; i++) {
+            for (let j = 0; j < count; j++) {
+                const x = (i / count - 0.5) * size * 2;
+                const z = (j / count - 0.5) * size * 2;
+                const y = 0;
+                points.push(x, y, z);
+            }
+        }
+
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+        
+        // Particle Material
+        const material = new THREE.PointsMaterial({
+            color: nardoColor,
+            size: 0.08,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        const particles = new THREE.Points(geometry, material);
+        scene.add(particles);
+
+        // Floating Lines (Connections)
+        const lineGeo = new THREE.BufferGeometry();
+        const linePos = [];
+        const lineCount = 50;
+
+        for(let i=0; i<lineCount; i++) {
+            const x = (Math.random() - 0.5) * 30;
+            const y = (Math.random() - 0.5) * 20;
+            const z = (Math.random() - 0.5) * 10;
+            
+            linePos.push(x, y, z);
+            linePos.push(x, y + Math.random() * 5, z);
+        }
+
+        lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
+        const lineMat = new THREE.LineBasicMaterial({
+            color: lightColor,
+            transparent: true,
+            opacity: 0.1
+        });
+        const lines = new THREE.LineSegments(lineGeo, lineMat);
+        scene.add(lines);
+
+        // Abstract Shapes (Business Blocks)
+        const cubes = [];
+        const cubeGeo = new THREE.BoxGeometry(1, 1, 1);
+        const cubeMat = new THREE.MeshBasicMaterial({
+            color: nardoColor,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15
+        });
+
+        for(let i=0; i<10; i++) {
+            const cube = new THREE.Mesh(cubeGeo, cubeMat);
+            cube.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 10
+            );
+            cube.rotation.set(Math.random(), Math.random(), Math.random());
+            cube.scale.setScalar(Math.random() * 2 + 0.5);
+            scene.add(cube);
+            cubes.push(cube);
+        }
+
+        camera.position.z = 8;
+        camera.position.y = 2;
+        camera.rotation.x = -0.2;
+
+        // Mouse Interaction
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
+            mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
+        });
+
+        // Animate
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            targetX = mouseX * 2;
+            targetY = mouseY * 2;
+
+            // Wave effect on grid
+            const positions = particles.geometry.attributes.position.array;
+            for(let i = 0; i < count * count; i++) {
+                const x = positions[i * 3];
+                const z = positions[i * 3 + 2];
+                // Financial wave simulation
+                positions[i * 3 + 1] = Math.sin(x * 0.5 + time) * Math.cos(z * 0.5 + time) * 1.5;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+
+            // Rotate lines
+            lines.rotation.y = time * 0.05;
+
+            // Animate cubes
+            cubes.forEach((cube, i) => {
+                cube.rotation.x += 0.002 * (i + 1);
+                cube.rotation.y += 0.003;
+                cube.position.y += Math.sin(time + i) * 0.005;
+            });
+
+            // Camera sway
+            camera.position.x += (targetX - camera.position.x) * 0.05;
+            camera.position.y += (-targetY + 2 - camera.position.y) * 0.05;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Scroll Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
