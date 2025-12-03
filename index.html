@@ -303,6 +303,21 @@
             align-items: center;
         }
 
+        .card-subtitle a {
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: opacity 0.3s ease;
+        }
+
+        .card-subtitle a:visited {
+            color: var(--text-primary);
+        }
+
+        .card-subtitle a:hover {
+            opacity: 0.7;
+            color: var(--text-primary);
+        }
+
         .company-logo {
             height: 24px;
             width: auto;
@@ -600,20 +615,26 @@
                 <div class="card fade-up">
                     <h3 class="card-title">Head of BD</h3>
                     <p class="card-subtitle">
-                        <img src="https://statics.bitexen.com/assets/logos/white_logo.png" alt="Bitexen" class="company-logo bitexen-logo">
+                        <a href="https://bitexen.com" target="_blank">
+                            <img src="https://statics.bitexen.com/assets/logos/white_logo.png" alt="Bitexen" class="company-logo bitexen-logo">
+                        </a>
                     </p>
                     <p class="card-desc">Built exchange platform from ground up. Positioned Bitexen among top three Turkish exchanges by volume within six months.</p>
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Head of Ops & BD</h3>
                     <p class="card-subtitle">
-                        <img src="https://www.tomya.com/assets/img/general/tomya-logo.svg" alt="Tomya" class="company-logo">
+                        <a href="https://www.tomya.com" target="_blank">
+                            <img src="https://www.tomya.com/assets/img/general/tomya-logo.svg" alt="Tomya" class="company-logo">
+                        </a>
                     </p>
                     <p class="card-desc">Developed core operational frameworks and business strategies for exchange launch.</p>
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Founder</h3>
-                    <p class="card-subtitle">DEU Blockchain Club</p>
+                    <p class="card-subtitle">
+                        <a href="https://x.com/deublockchain" target="_blank">DEU Blockchain</a>
+                    </p>
                     <p class="card-desc">Founded Turkiye's second blockchain club with a 200+ member community.</p>
                 </div>
             </div>
