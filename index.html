@@ -246,7 +246,7 @@
         }
 
         .card {
-            background: var(--bg-panel);
+            background: rgba(28, 30, 33, 0.1);
             padding: 1.5rem;
             border: 1px solid var(--border);
             transition: all 0.4s ease;
@@ -254,6 +254,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .card:hover {
@@ -301,6 +303,20 @@
             letter-spacing: 0.05em;
             display: flex;
             align-items: center;
+        }
+
+        .card-subtitle.with-line {
+            display: flex;
+            align-items: center;
+        }
+
+        .card-subtitle.with-line::after {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background: var(--border);
+            margin-left: 0.75rem;
+            align-self: center;
         }
 
         .card-subtitle a {
@@ -604,19 +620,19 @@
             <div class="grid-cards">
                 <div class="card fade-up">
                     <h3 class="card-title">Consultant</h3>
-                    <p class="card-subtitle">Independent</p>
+                    <p class="card-subtitle with-line">Independent</p>
                     <p class="card-desc">Technical advisory for blockchain startups. Focused on infrastructure scalability and market growth strategies.</p>
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Head of Crypto</h3>
-                    <p class="card-subtitle">
+                    <p class="card-subtitle with-line">
                         <a href="https://www.linkedin.com/company/keopex/about/" target="_blank">Keopex</a>
                     </p>
                     <p class="card-desc">Led entire crypto operations division. Engineered strategic partnerships and product roadmaps for large-scale integration.</p>
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Head of BD</h3>
-                    <p class="card-subtitle">
+                    <p class="card-subtitle with-line">
                         <a href="https://bitexen.com" target="_blank">
                             <img src="https://statics.bitexen.com/assets/logos/white_logo.png" alt="Bitexen" class="company-logo bitexen-logo">
                         </a>
@@ -625,7 +641,7 @@
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Head of Ops & BD</h3>
-                    <p class="card-subtitle">
+                    <p class="card-subtitle with-line">
                         <a href="https://www.tomya.com" target="_blank">
                             <img src="https://www.tomya.com/assets/img/general/tomya-logo.svg" alt="Tomya" class="company-logo">
                         </a>
@@ -634,7 +650,7 @@
                 </div>
                 <div class="card fade-up">
                     <h3 class="card-title">Founder</h3>
-                    <p class="card-subtitle">
+                    <p class="card-subtitle with-line">
                         <a href="https://x.com/deublockchain" target="_blank">DEU Blockchain</a>
                     </p>
                     <p class="card-desc">Founded Turkiye's second blockchain club with a 200+ member community.</p>
