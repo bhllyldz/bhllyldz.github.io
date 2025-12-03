@@ -41,16 +41,13 @@
             line-height: 1.6;
         }
 
-        /* Custom Scrollbar */
+        /* Hide Scrollbar */
+        html {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
         ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--nardo-grey);
-            border-radius: 3px;
+            display: none; /* Chrome, Safari, Opera */
         }
 
         /* Canvas & Overlay */
@@ -567,6 +564,108 @@
                 align-items: center;
             }
         }
+
+        /* Crypto Ticker - Optimized */
+        .crypto-ticker {
+            width: 100%;
+            background: var(--bg-dark);
+            border-top: 1px solid var(--border);
+            overflow: hidden;
+            padding: 0.75rem 0;
+            position: relative;
+        }
+
+        .ticker-wrapper {
+            display: flex;
+            width: fit-content;
+            will-change: transform;
+        }
+
+        .ticker-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.50rem;
+            padding: 0 1rem;
+            white-space: nowrap;
+        }
+
+        .ticker-symbol {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            color: var(--nardo-grey);
+            letter-spacing: 0.1em;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .ticker-price {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            width: 95px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .ticker-change {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 2px;
+            width: 65px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .ticker-change.positive {
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .ticker-change.negative {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .ticker-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .crypto-ticker {
+                padding: 0.5rem 0;
+            }
+            
+            .ticker-item {
+                padding: 0 1.5rem;
+                gap: 0.5rem;
+            }
+            
+            .ticker-symbol {
+                font-size: 0.75rem;
+            }
+            
+            .ticker-price {
+                font-size: 0.8rem;
+                width: 85px;
+            }
+            
+            .ticker-change {
+                font-size: 0.65rem;
+                padding: 0.1rem 0.35rem;
+                width: 55px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -711,6 +810,25 @@
     <footer>
         <span>Behlül Yıldız © 2025</span>
     </footer>
+
+    <!-- Crypto Ticker -->
+    <div class="crypto-ticker">
+        <div class="ticker-wrapper" id="ticker-wrapper">
+            <div class="ticker-content" id="ticker-original">
+                <span class="ticker-item"><span class="ticker-symbol">BTC/USDT</span><span class="ticker-price" id="btc-price">--</span><span class="ticker-change" id="btc-change">--</span></span>
+                <span class="ticker-divider"></span>
+                <span class="ticker-item"><span class="ticker-symbol">ETH/USDT</span><span class="ticker-price" id="eth-price">--</span><span class="ticker-change" id="eth-change">--</span></span>
+                <span class="ticker-divider"></span>
+                <span class="ticker-item"><span class="ticker-symbol">SOL/USDT</span><span class="ticker-price" id="sol-price">--</span><span class="ticker-change" id="sol-change">--</span></span>
+                <span class="ticker-divider"></span>
+                <span class="ticker-item"><span class="ticker-symbol">XRP/USDT</span><span class="ticker-price" id="xrp-price">--</span><span class="ticker-change" id="xrp-change">--</span></span>
+                <span class="ticker-divider"></span>
+                <span class="ticker-item"><span class="ticker-symbol">TRX/USDT</span><span class="ticker-price" id="trx-price">--</span><span class="ticker-change" id="trx-change">--</span></span>
+                <span class="ticker-divider"></span>
+            </div>
+            <div class="ticker-content" id="ticker-clone" aria-hidden="true"></div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
@@ -876,6 +994,131 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        // Crypto Ticker - requestAnimationFrame based smooth animation
+        (function() {
+            const wrapper = document.getElementById('ticker-wrapper');
+            const original = document.getElementById('ticker-original');
+            const clone = document.getElementById('ticker-clone');
+            
+            if (!wrapper || !original || !clone) return;
+
+            // Clone the content for seamless loop
+            clone.innerHTML = original.innerHTML;
+
+            // Animation variables
+            let contentWidth = original.offsetWidth;
+            let position = -contentWidth; // Start from negative (clone visible first)
+            const duration = 30000; // 30 seconds for one complete cycle
+            let lastTime = performance.now();
+
+            // Smooth animation with requestAnimationFrame
+            function animate(currentTime) {
+                const deltaTime = currentTime - lastTime;
+                lastTime = currentTime;
+                
+                // Calculate speed based on content width and desired duration
+                // speed = contentWidth / duration * deltaTime
+                const speed = (contentWidth / duration) * deltaTime;
+                
+                position += speed;
+                
+                // Reset when animation completes one cycle
+                if (position >= 0) {
+                    position = -contentWidth;
+                }
+
+                wrapper.style.transform = `translateX(${position}px)`;
+                requestAnimationFrame(animate);
+            }
+
+            // Start animation
+            requestAnimationFrame(animate);
+
+            // Recalculate on resize
+            window.addEventListener('resize', () => {
+                contentWidth = original.offsetWidth;
+                if (position < -contentWidth) {
+                    position = -contentWidth;
+                }
+            });
+
+            // Price update functions
+            function formatPrice(price, decimals = 2) {
+                return parseFloat(price).toLocaleString('en-US', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals
+                });
+            }
+
+            function updatePrice(symbol, price, change) {
+                // TRX and XRP need 4 decimals
+                const decimals = (symbol === 'trx' || symbol === 'xrp') ? 4 : 2;
+                const formattedPrice = formatPrice(price, decimals);
+                const changePercent = parseFloat(change).toFixed(2);
+                const isPositive = changePercent >= 0;
+                const changeText = (isPositive ? '+' : '') + changePercent + '%';
+                const changeClass = isPositive ? 'positive' : 'negative';
+
+                // Update original
+                const priceEl = document.getElementById(symbol + '-price');
+                const changeEl = document.getElementById(symbol + '-change');
+                
+                if (priceEl) priceEl.textContent = formattedPrice;
+                if (changeEl) {
+                    changeEl.textContent = changeText;
+                    changeEl.className = 'ticker-change ' + changeClass;
+                }
+
+                // Update clone
+                const clonePriceEls = clone.querySelectorAll('#' + symbol + '-price, [id="' + symbol + '-price"]');
+                const cloneChangeEls = clone.querySelectorAll('#' + symbol + '-change, [id="' + symbol + '-change"]');
+                
+                // Since clone has same structure, find by position
+                const originalPriceEl = original.querySelector('#' + symbol + '-price');
+                if (originalPriceEl) {
+                    const index = Array.from(original.querySelectorAll('.ticker-price')).indexOf(originalPriceEl);
+                    const clonePrices = clone.querySelectorAll('.ticker-price');
+                    const cloneChanges = clone.querySelectorAll('.ticker-change');
+                    
+                    if (clonePrices[index]) clonePrices[index].textContent = formattedPrice;
+                    if (cloneChanges[index]) {
+                        cloneChanges[index].textContent = changeText;
+                        cloneChanges[index].className = 'ticker-change ' + changeClass;
+                    }
+                }
+            }
+
+            // Binance WebSocket
+            function connectWebSocket() {
+                const ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker/ethusdt@ticker/solusdt@ticker/xrpusdt@ticker/trxusdt@ticker');
+
+                ws.onmessage = function(event) {
+                    const data = JSON.parse(event.data);
+                    const symbolMap = {
+                        'BTCUSDT': 'btc',
+                        'ETHUSDT': 'eth',
+                        'SOLUSDT': 'sol',
+                        'XRPUSDT': 'xrp',
+                        'TRXUSDT': 'trx'
+                    };
+                    
+                    if (symbolMap[data.s]) {
+                        updatePrice(symbolMap[data.s], data.c, data.P);
+                    }
+                };
+
+                ws.onerror = function() {
+                    setTimeout(connectWebSocket, 5000);
+                };
+
+                ws.onclose = function() {
+                    setTimeout(connectWebSocket, 5000);
+                };
+            }
+
+            connectWebSocket();
+        })();
     </script>
 </body>
 </html>
