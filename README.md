@@ -1,4 +1,4 @@
-# Behlul Yildiz - Personal Portfolio
+# Behlül Yıldız - Personal Portfolio
 
 A modern, animated one-page portfolio website featuring Three.js particle effects and smooth scroll animations.
 
