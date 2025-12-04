@@ -91,24 +91,32 @@
             width: 100%;
             padding: 3rem 4rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: flex-start;
             z-index: 10;
             pointer-events: none; /* Allow clicking through header area */
         }
 
-        .logo-embedded {
+        .logo-nav {
+            color: #ffffff !important;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-mobile {
+            display: none;
             font-family: 'Oswald', sans-serif;
             font-weight: 400;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 5vw, 1.5rem);
             letter-spacing: 0.05em;
             color: var(--text-secondary);
             text-decoration: none;
-            position: relative;
             pointer-events: auto;
-            padding-left: 1rem;
-            border-left: 2px solid var(--nardo-grey);
-            line-height: 1;
         }
 
         .nav-embedded {
@@ -213,6 +221,16 @@
 
         .stat {
             text-align: center;
+        }
+
+        .stat h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat p {
+            font-size: 0.90rem;
+            color: rgb(156, 163, 175);
         }
 
         /* Experience & About Cards */
@@ -414,6 +432,7 @@
             text-decoration: none;
             position: relative;
             z-index: 10;
+            margin-top: 40px;
         }
 
         .cta-text {
@@ -504,15 +523,14 @@
                 align-items: center;
                 justify-content: center;
             }
-
-            .logo-embedded {
-                padding-left: 0;
-                border-left: none;
-                text-align: center;
-            }
             
             .nav-embedded {
                 display: none; /* Hide nav links on mobile for simplicity */
+            }
+            
+            .logo-mobile {
+                display: block;
+                margin-top: 80px;
             }
 
             /* Section Mobile */
@@ -534,7 +552,8 @@
                 margin-top: 2rem;
             }
             
-            .stat h4 { font-size: 2rem; }
+            .stat h4 { font-size: 1.5rem; }
+            .stat p { font-size: 0.875rem; }
             
             /* Grid Mobile */
             .grid-cards { 
@@ -673,8 +692,9 @@
 
     <!-- Navigation Embedded -->
     <div class="embedded-header">
-        <a href="#" class="logo-embedded">BEHLUL YILDIZ</a>
+        <a href="#" class="logo-mobile">BEHLUL YILDIZ</a>
         <ul class="nav-embedded">
+            <li><a href="#" class="logo-nav">BEHLUL YILDIZ</a></li>
             <li><a href="#about">Profile</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#skills">Skills</a></li>
@@ -694,7 +714,7 @@
                     <div class="hero-stats">
                         <div class="stat">
                             <h4>7+</h4>
-                            <p>Years Experience</p>
+                            <p>Years</p>
                         </div>
                         <div class="stat">
                             <h4>20+</h4>
@@ -702,7 +722,7 @@
                         </div>
                         <div class="stat">
                             <h4>1.5M+</h4>
-                            <p>Users Impacted</p>
+                            <p>End Users</p>
                         </div>
                     </div>
                 </div>
@@ -781,7 +801,7 @@
                 <h2 class="contact-heading">CONTACT</h2>
                 <div class="contact-line"></div>
                 <a href="mailto:me@behlulyildiz.com" class="contact-cta">
-                    <span class="cta-text">GET IN TOUCH</span>
+                    <span class="cta-text">BEHLUL YILDIZ</span>
                     <span class="cta-handle">me@behlulyildiz.com</span>
                 </a>
                 <div class="social-links fade-up">
@@ -806,7 +826,7 @@
     </main>
 
     <footer>
-        <span>Behlül Yıldız © 2025</span>
+        <span>© 2025</span>
     </footer>
 
     <!-- Crypto Ticker -->
