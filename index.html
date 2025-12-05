@@ -170,7 +170,7 @@
             position: relative;
         }
 
-        #skills {
+        #projects-skills {
             padding-bottom: 3rem;
         }
 
@@ -254,10 +254,51 @@
             max-width: 200px;
         }
 
+        .section-title-right {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1rem;
+            text-align: right;
+        }
+
+        .section-title-right::before {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background: var(--border);
+            max-width: 200px;
+        }
+
         .grid-cards {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 1rem;
+        }
+
+        /* Skills & Projects Wrapper */
+        .skills-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: start;
+        }
+
+        .skill-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .skill-column .section-title,
+        .skill-column .section-title-right {
+            margin-bottom: 2rem;
+            min-height: 3.5rem;
+        }
+
+        .skill-category {
+            flex: 1;
         }
 
         .card {
@@ -362,33 +403,37 @@
             max-width: 80px;
         }
 
+        .company-logo.wuugoo-logo {
+            height: 24px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        .project-company {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-company:hover {
+            opacity: 0.7;
+        }
+
         .card-desc {
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
 
-        /* Skills List */
-        .skills-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
-        }
-
-        .skill-category {
-            margin-bottom: 3rem;
-        }
-
-        .skill-category h3 {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: var(--nardo-light);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1rem;
-        }
-
+        /* Skills & Projects List */
         .skill-item {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.75rem;
             padding: 1rem 0;
             border-bottom: 1px solid rgba(255,255,255,0.03);
             color: var(--text-secondary);
@@ -398,6 +443,22 @@
         .skill-item:hover {
             color: var(--text-primary);
             padding-left: 1rem;
+            border-bottom-color: var(--nardo-grey);
+        }
+
+        .skill-item-right {
+            display: flex;
+            justify-content: flex-end;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            text-align: right;
+        }
+
+        .skill-item-right:hover {
+            color: var(--text-primary);
+            padding-right: 1rem;
             border-bottom-color: var(--nardo-grey);
         }
 
@@ -561,9 +622,53 @@
                 gap: 1.5rem;
             }
 
+            /* Skills wrapper - stack vertically on mobile */
             .skills-wrapper {
                 grid-template-columns: 1fr;
-                gap: 3rem;
+                gap: 4rem;
+            }
+
+            .skill-column:first-child .section-title {
+                margin-top: 4rem;
+            }
+
+            .skill-column .section-title,
+            .skill-column .section-title-right {
+                margin-bottom: 4rem;
+            }
+
+            .skill-column:last-child {
+                margin-top: 6rem;
+            }
+
+            .section-title-right {
+                justify-content: flex-start;
+            }
+
+            .section-title-right::before {
+                display: none;
+            }
+
+            .section-title-right::after {
+                content: '';
+                height: 1px;
+                flex-grow: 1;
+                background: var(--border);
+                max-width: 200px;
+            }
+
+            .skill-item-right {
+                justify-content: flex-start;
+                text-align: left;
+            }
+
+            .skill-item-right:hover {
+                padding-right: 0;
+                padding-left: 1rem;
+            }
+
+            .skill-item.no-hover:hover {
+                padding-left: 0;
             }
 
             /* Contact Mobile */
@@ -697,7 +802,7 @@
             <li><a href="#" class="logo-nav">BEHLUL YILDIZ</a></li>
             <li><a href="#about">Profile</a></li>
             <li><a href="#experience">Experience</a></li>
-            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects-skills">Projects / Skills</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
     </div>
@@ -775,21 +880,31 @@
             </div>
         </section>
 
-        <!-- Skills -->
-        <section id="skills">
-            <div class="section-header fade-up">
-                <h2 class="section-title">SKILLS</h2>
-            </div>
-            <div class="skills-wrapper">
-                <div class="skill-column fade-up">
+        <!-- Projects & Skills -->
+        <section id="projects-skills">
+            <div class="skills-wrapper fade-up">
+                <div class="skill-column" id="projects">
+                    <h2 class="section-title">PROJECTS</h2>
                     <div class="skill-category">
-                        <div class="skill-item"><span>Executive Management</span></div>
-                        <div class="skill-item"><span>Strategic Planning</span></div>
-                        <div class="skill-item"><span>Investor Relations</span></div>
-                        <div class="skill-item"><span>End-to-End Product Development</span></div>
-                        <div class="skill-item"><span>P&L Management</span></div>
-                        <div class="skill-item"><span>Vendor & Partner Relations</span></div>
-                        <div class="skill-item"><span>Regulatory Compliance</span></div>
+                        <div class="skill-item"><span>High-Performance Matching Engine</span></div>
+                        <div class="skill-item"><span>Crypto iGaming Platform</span><a href="https://www.linkedin.com/company/keopex/about/" target="_blank" class="project-company">KEOPEX</a></div>
+                        <div class="skill-item no-hover"><span>End-to-End Product Development</span><a href="https://bitexen.com" target="_blank"><img src="https://statics.bitexen.com/assets/logos/white_logo.png" alt="Bitexen" class="company-logo bitexen-logo"></a></div>
+                        <div class="skill-item"><span>ExenPay Development</span><a href="https://bitexen.com" target="_blank"><img src="https://statics.bitexen.com/assets/logos/white_logo.png" alt="Bitexen" class="company-logo bitexen-logo"></a></div>
+                        <div class="skill-item"><span>Fan Token Program</span><a href="https://bitexen.com" target="_blank"><img src="https://statics.bitexen.com/assets/logos/white_logo.png" alt="Bitexen" class="company-logo bitexen-logo"></a></div>
+                        <div class="skill-item"><span>Crypto Exchange Go-Live</span><a href="https://www.tomya.com" target="_blank"><img src="https://www.tomya.com/assets/img/general/tomya-logo.svg" alt="Tomya" class="company-logo"></a></div>
+                        <div class="skill-item"><span>WuuGoo NFT</span><a href="https://wuugoo.com" target="_blank"><img src="wuugoo-logo.png" alt="WuuGoo" class="company-logo wuugoo-logo"></a></div>
+                    </div>
+                </div>
+                <div class="skill-column">
+                    <h2 class="section-title-right">SKILLS</h2>
+                    <div class="skill-category">
+                        <div class="skill-item-right"><span>Executive Management</span></div>
+                        <div class="skill-item-right"><span>Strategic Planning</span></div>
+                        <div class="skill-item-right"><span>Product Development</span></div>
+                        <div class="skill-item-right"><span>Investor Relations</span></div>
+                        <div class="skill-item-right"><span>P&L Management</span></div>
+                        <div class="skill-item-right"><span>Vendor & Partner Relations</span></div>
+                        <div class="skill-item-right"><span>Regulatory Compliance</span></div>
                     </div>
                 </div>
             </div>
