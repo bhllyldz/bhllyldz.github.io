@@ -1,0 +1,23 @@
+{
+    "name": "Behlul Yildiz",
+    "short_name": "BY",
+    "description": "Advising crypto ventures on business strategy, operational scalability, and regulatory readiness.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#121315",
+    "theme_color": "#121315",
+    "icons": [
+        {
+            "src": "favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "apple-touch-icon.svg",
+            "sizes": "180x180",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
